@@ -27,17 +27,18 @@ int main(int argc, char* argv[]) {
 
     double result = dif / (double)2;
 
+    cout.precision(20);
     if (result >= a[0]) {
         if (result >= (l - a[n-1])) {
-            cout << result << endl;
+            cout << fixed << result << endl;
         } else {
-            cout << l - a[n-1] << endl;
+            cout << fixed << l - a[n-1] << endl;
         }
     } else {
         if (a[0] >= (l - a[n-1])) {
-            cout << a[0] << endl;
+            cout << fixed << a[0] << endl;
         } else {
-            cout << l - a[n-1] << endl;
+            cout << fixed << l - a[n-1] << endl;
         }
     }
 
