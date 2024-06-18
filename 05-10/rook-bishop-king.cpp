@@ -28,21 +28,46 @@ void build_pieces() {
                     }
                     
                     //configs for king
-                    if (abs(a - i) <= 1 || abs(b - j) <=1 ) {
-                        adj_king[pos].push_back(a * SIZE + b);
-                    } else if (a == i + 1 && b == j + 1) {
-                        adj_king[pos].push_back(a * SIZE + b);
-                    } else if (a == i - 1 && b == j - 1) {
-                        adj_king[pos].push_back(a * SIZE + b);
-                    } else if (a == i + 1 && b == j - 1) {
-                        adj_king[pos].push_back(a * SIZE + b);
-                    } else if (a == i - 1 && b == j + 1) {
+                    if (abs(a - i) <= 1 && abs(b - j) <=1 ) {
                         adj_king[pos].push_back(a * SIZE + b);
                     }
                 }
             }
         }
     }
+}
+
+void bfs(vector<int> &dist, int pos_init, int piece) {
+    vector<vector<int>> adj;
+    switch (piece) {
+        case 0:
+            adj = adj_rook;
+            break;
+        case 1:
+            adj = adj_bishop;
+            break;
+        case 2:
+            adj = adj_king;
+            break;
+    }
+
+    fill(dist.begin(), dist.end(), INF);
+    dist[pos_init] = 0;
+    queue<int> q;
+    q.push(pos_init);
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        for (int j = 0; j < (int)adj[u].size(); j++) {
+            int v = adj[u][j];
+            if (dist[v] == INF) {
+                dist[v] = dist[u] + 1;
+                q.push(v);
+            }
+        }
+    }
+
 }
 
 int main(int argc, char *argv[]) {
@@ -57,24 +82,16 @@ int main(int argc, char *argv[]) {
 
     build_pieces();
 
-    vector<int> dist(SIZE * SIZE, INF);
-    dist[pos_init] = 0;
-    queue<int> q;
-    q.push(pos_init);
-
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-        for (int j = 0; j < (int)adj_rook[u].size(); j++) {
-            int v = adj_rook[u][j];
-            if (dist[v] == INF) {
-                dist[v] = dist[u] + 1;
-                q.push(v);
-            }
+    vector<int> dist(SIZE * SIZE);
+    for (int i = 0; i < 3; i++) {
+        bfs(dist, pos_init, i);
+        if (dist[pos_end] != INF) {
+            cout << dist[pos_end] << " ";
+        } else {
+            cout << 0 << " ";
         }
     }
-
-    cout << dist[pos_end] << endl;
+    cout << endl;
 
     return 0;
 }
